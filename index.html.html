@@ -1,0 +1,804 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Mantis — Card Portfolio</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #0a0a0a;
+    --surface: #111111;
+    --surface2: #1a1a1a;
+    --border: rgba(255,255,255,0.08);
+    --border2: rgba(255,255,255,0.15);
+    --text: #f0f0f0;
+    --muted: #666;
+    --accent: #c8f135;
+    --accent-dim: rgba(200,241,53,0.1);
+    --red: #ff4d4d;
+    --red-dim: rgba(255,77,77,0.1);
+    --green: #4dff91;
+    --green-dim: rgba(77,255,145,0.1);
+    --font: 'Syne', sans-serif;
+    --mono: 'DM Mono', monospace;
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font);
+    min-height: 100vh;
+    padding: 0;
+  }
+
+  /* HEADER */
+  header {
+    border-bottom: 1px solid var(--border);
+    padding: 20px 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    background: var(--bg);
+    z-index: 100;
+  }
+
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 18px;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+  }
+
+  .logo-icon {
+    width: 32px;
+    height: 32px;
+    background: var(--accent);
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    color: #000;
+  }
+
+  .header-right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .last-updated {
+    font-size: 12px;
+    color: var(--muted);
+    font-family: var(--mono);
+  }
+
+  /* MAIN */
+  main { padding: 40px; max-width: 1400px; margin: 0 auto; }
+
+  /* STATS GRID */
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-bottom: 40px;
+  }
+
+  .stat-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px;
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.2s;
+  }
+
+  .stat-card:hover { border-color: var(--border2); }
+
+  .stat-card.accent { border-color: rgba(200,241,53,0.3); background: rgba(200,241,53,0.04); }
+
+  .stat-label {
+    font-size: 11px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 12px;
+    font-family: var(--mono);
+  }
+
+  .stat-value {
+    font-size: 28px;
+    font-weight: 700;
+    letter-spacing: -1px;
+  }
+
+  .stat-value.green { color: var(--green); }
+  .stat-value.red { color: var(--red); }
+  .stat-value.accent { color: var(--accent); }
+
+  .stat-sub {
+    font-size: 12px;
+    color: var(--muted);
+    margin-top: 6px;
+    font-family: var(--mono);
+  }
+
+  /* TOOLBAR */
+  .toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+
+  .toolbar-left {
+    font-size: 13px;
+    color: var(--muted);
+    font-family: var(--mono);
+  }
+
+  .btn {
+    background: var(--accent);
+    color: #000;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 20px;
+    font-size: 13px;
+    font-weight: 700;
+    font-family: var(--font);
+    cursor: pointer;
+    letter-spacing: 0.3px;
+    transition: opacity 0.15s, transform 0.1s;
+  }
+
+  .btn:hover { opacity: 0.85; }
+  .btn:active { transform: scale(0.97); }
+
+  .btn-ghost {
+    background: transparent;
+    color: var(--text);
+    border: 1px solid var(--border2);
+    border-radius: 8px;
+    padding: 8px 16px;
+    font-size: 13px;
+    font-family: var(--font);
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+
+  .btn-ghost:hover { background: var(--surface2); }
+
+  /* TABLE */
+  .table-wrap {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    overflow: hidden;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+  }
+
+  thead tr {
+    border-bottom: 1px solid var(--border);
+  }
+
+  th {
+    padding: 14px 20px;
+    text-align: left;
+    font-size: 11px;
+    color: var(--muted);
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    font-family: var(--mono);
+  }
+
+  th:not(:first-child) { text-align: right; }
+
+  tbody tr {
+    border-bottom: 1px solid var(--border);
+    transition: background 0.1s;
+    cursor: pointer;
+  }
+
+  tbody tr:last-child { border-bottom: none; }
+  tbody tr:hover { background: var(--surface2); }
+
+  td {
+    padding: 16px 20px;
+    color: var(--text);
+  }
+
+  td:not(:first-child) { text-align: right; font-family: var(--mono); font-size: 13px; }
+
+  .item-name { font-weight: 600; font-size: 14px; }
+  .item-type {
+    font-size: 11px;
+    color: var(--muted);
+    margin-top: 2px;
+    font-family: var(--mono);
+  }
+
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-family: var(--mono);
+    font-weight: 500;
+  }
+
+  .badge-up { background: var(--green-dim); color: var(--green); }
+  .badge-down { background: var(--red-dim); color: var(--red); }
+  .badge-neutral { background: var(--surface2); color: var(--muted); }
+
+  .profit-positive { color: var(--green); font-weight: 600; }
+  .profit-negative { color: var(--red); font-weight: 600; }
+
+  .action-btns { display: flex; gap: 8px; justify-content: flex-end; }
+
+  .btn-sm {
+    padding: 5px 10px;
+    font-size: 11px;
+    border-radius: 6px;
+    border: 1px solid var(--border2);
+    background: transparent;
+    color: var(--muted);
+    cursor: pointer;
+    font-family: var(--mono);
+    transition: all 0.15s;
+  }
+
+  .btn-sm:hover { color: var(--text); border-color: var(--border2); background: var(--surface2); }
+  .btn-sm.del:hover { color: var(--red); border-color: var(--red); }
+
+  /* EMPTY STATE */
+  .empty {
+    padding: 80px 20px;
+    text-align: center;
+    color: var(--muted);
+  }
+
+  .empty-icon { font-size: 48px; margin-bottom: 16px; }
+  .empty h3 { font-size: 18px; font-weight: 600; color: var(--text); margin-bottom: 8px; }
+  .empty p { font-size: 14px; }
+
+  /* MODAL */
+  .overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.8);
+    z-index: 1000;
+    backdrop-filter: blur(4px);
+    align-items: center;
+    justify-content: center;
+  }
+
+  .overlay.active { display: flex; }
+
+  .modal {
+    background: var(--surface);
+    border: 1px solid var(--border2);
+    border-radius: 20px;
+    padding: 32px;
+    width: 480px;
+    max-width: 90vw;
+    animation: slideUp 0.2s ease;
+  }
+
+  @keyframes slideUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .modal h2 { font-size: 20px; font-weight: 700; margin-bottom: 24px; }
+
+  .form-group { margin-bottom: 16px; }
+
+  label {
+    display: block;
+    font-size: 11px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    margin-bottom: 6px;
+    font-family: var(--mono);
+  }
+
+  input, select {
+    width: 100%;
+    background: var(--surface2);
+    border: 1px solid var(--border2);
+    border-radius: 8px;
+    padding: 10px 14px;
+    color: var(--text);
+    font-size: 14px;
+    font-family: var(--font);
+    outline: none;
+    transition: border-color 0.15s;
+  }
+
+  input:focus, select:focus { border-color: var(--accent); }
+  select option { background: var(--surface2); }
+
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+  .modal-footer { display: flex; gap: 10px; margin-top: 24px; justify-content: flex-end; }
+
+  /* PRICE TAG */
+  .ebay-badge {
+    font-size: 10px;
+    font-family: var(--mono);
+    color: var(--muted);
+    display: block;
+    margin-top: 2px;
+  }
+
+  /* LOADING SPINNER */
+  .spinner {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    border: 2px solid var(--border2);
+    border-top-color: var(--accent);
+    border-radius: 50%;
+    animation: spin 0.6s linear infinite;
+    vertical-align: middle;
+    margin-right: 4px;
+  }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* TOAST */
+  .toast {
+    position: fixed;
+    bottom: 32px;
+    right: 32px;
+    background: var(--surface);
+    border: 1px solid var(--border2);
+    border-radius: 10px;
+    padding: 14px 20px;
+    font-size: 13px;
+    font-family: var(--mono);
+    z-index: 2000;
+    animation: fadeIn 0.2s ease;
+    max-width: 300px;
+  }
+
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+  @media (max-width: 900px) {
+    main { padding: 20px; }
+    header { padding: 16px 20px; }
+    .stats-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">
+    <div class="logo-icon">M</div>
+    The Mantis — Card Portfolio
+  </div>
+  <div class="header-right">
+    <span class="last-updated" id="lastUpdated">last updated: never</span>
+    <button class="btn-ghost" onclick="refreshAllPrices()">↻ refresh prices</button>
+    <button class="btn" onclick="openModal()">+ add item</button>
+  </div>
+</header>
+
+<main>
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-label">total invested</div>
+      <div class="stat-value" id="totalInvested">$0.00</div>
+      <div class="stat-sub" id="itemCount">0 items</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">market value</div>
+      <div class="stat-value" id="marketValue">$0.00</div>
+      <div class="stat-sub">at current ebay prices</div>
+    </div>
+    <div class="stat-card accent">
+      <div class="stat-label">unrealized profit</div>
+      <div class="stat-value accent" id="totalProfit">$0.00</div>
+      <div class="stat-sub" id="profitPct">—</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">best performer</div>
+      <div class="stat-value" id="bestItem" style="font-size:16px; padding-top:4px;">—</div>
+      <div class="stat-sub" id="bestPct">—</div>
+    </div>
+  </div>
+
+  <div class="toolbar">
+    <div class="toolbar-left" id="tableLabel">showing 0 items</div>
+  </div>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>item</th>
+          <th>qty</th>
+          <th>paid / unit</th>
+          <th>total cost</th>
+          <th>market avg</th>
+          <th>market total</th>
+          <th>profit</th>
+          <th>trend</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody id="inventoryBody"></tbody>
+    </table>
+    <div id="emptyState" class="empty">
+      <div class="empty-icon">🃏</div>
+      <h3>No inventory yet</h3>
+      <p>Add your first item to start tracking your portfolio</p>
+    </div>
+  </div>
+</main>
+
+<!-- ADD / EDIT MODAL -->
+<div class="overlay" id="overlay" onclick="handleOverlayClick(event)">
+  <div class="modal">
+    <h2 id="modalTitle">Add item</h2>
+    <div class="form-group">
+      <label>item name</label>
+      <input type="text" id="itemName" placeholder="e.g. Silver Tempest Booster Box" />
+    </div>
+    <div class="form-group">
+      <label>type</label>
+      <select id="itemType">
+        <option>Booster Box</option>
+        <option>Elite Trainer Box</option>
+        <option>Booster Pack</option>
+        <option>Tin</option>
+        <option>Collection Box</option>
+        <option>Bundle</option>
+        <option>Other</option>
+      </select>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>quantity</label>
+        <input type="number" id="itemQty" value="1" min="1" />
+      </div>
+      <div class="form-group">
+        <label>price paid / unit ($)</label>
+        <input type="number" id="itemPaid" placeholder="0.00" step="0.01" />
+      </div>
+    </div>
+    <div class="form-group">
+      <label>ebay search term (for price lookup)</label>
+      <input type="text" id="itemSearch" placeholder="e.g. Silver Tempest Booster Box sealed" />
+    </div>
+    <div class="form-group">
+      <label>current market price ($) — optional override</label>
+      <input type="number" id="itemMarket" placeholder="auto-fetched from eBay" step="0.01" />
+    </div>
+    <div class="modal-footer">
+      <button class="btn-ghost" onclick="closeModal()">cancel</button>
+      <button class="btn" onclick="saveItem()">save item</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const STORAGE_KEY = 'mantis_inventory';
+let inventory = [];
+let editingId = null;
+
+function load() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    inventory = raw ? JSON.parse(raw) : [];
+  } catch { inventory = []; }
+}
+
+function save() {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(inventory));
+}
+
+function genId() {
+  return Date.now().toString(36) + Math.random().toString(36).slice(2);
+}
+
+function fmt(n) {
+  if (n == null || isNaN(n)) return '—';
+  return '$' + Math.abs(n).toFixed(2);
+}
+
+function fmtSigned(n) {
+  if (n == null || isNaN(n)) return '—';
+  const sign = n >= 0 ? '+' : '-';
+  return sign + '$' + Math.abs(n).toFixed(2);
+}
+
+async function fetchEbayPrice(searchTerm) {
+  if (!searchTerm) return null;
+  try {
+    const q = encodeURIComponent(searchTerm + ' sold');
+    const url = `https://api.allorigins.win/get?url=${encodeURIComponent('https://www.ebay.com/sch/i.html?_nkw=' + q + '&LH_Sold=1&LH_Complete=1&_sop=13')}`;
+    const res = await fetch(url, { signal: AbortSignal.timeout(10000) });
+    const data = await res.json();
+    const html = data.contents;
+    const prices = [];
+    const regex = /class="s-item__price"[^>]*>\s*\$?([\d,]+\.?\d*)/g;
+    let match;
+    while ((match = regex.exec(html)) !== null) {
+      const price = parseFloat(match[1].replace(',', ''));
+      if (!isNaN(price) && price > 0) prices.push(price);
+    }
+    if (prices.length === 0) return null;
+    prices.sort((a, b) => a - b);
+    const recent = prices.slice(0, Math.min(10, prices.length));
+    const avg = recent.reduce((a, b) => a + b, 0) / recent.length;
+    return Math.round(avg * 100) / 100;
+  } catch { return null; }
+}
+
+function render() {
+  const tbody = document.getElementById('inventoryBody');
+  const empty = document.getElementById('emptyState');
+
+  if (inventory.length === 0) {
+    tbody.innerHTML = '';
+    empty.style.display = 'block';
+    updateStats();
+    return;
+  }
+
+  empty.style.display = 'none';
+  document.getElementById('tableLabel').textContent = `showing ${inventory.length} item${inventory.length !== 1 ? 's' : ''}`;
+
+  tbody.innerHTML = inventory.map(item => {
+    const totalCost = item.qty * item.paid;
+    const market = item.market;
+    const totalMarket = market ? item.qty * market : null;
+    const profit = totalMarket != null ? totalMarket - totalCost : null;
+    const profitPct = profit != null ? (profit / totalCost * 100) : null;
+
+    let trendBadge = '<span class="badge badge-neutral">—</span>';
+    if (profitPct != null) {
+      if (profitPct > 2) trendBadge = `<span class="badge badge-up">↑ ${profitPct.toFixed(1)}%</span>`;
+      else if (profitPct < -2) trendBadge = `<span class="badge badge-down">↓ ${Math.abs(profitPct).toFixed(1)}%</span>`;
+      else trendBadge = `<span class="badge badge-neutral">— flat</span>`;
+    }
+
+    const profitClass = profit == null ? '' : profit >= 0 ? 'profit-positive' : 'profit-negative';
+    const marketDisplay = market
+      ? `${fmt(market)}<span class="ebay-badge">ebay avg</span>`
+      : item.fetchingPrice
+        ? `<span class="spinner"></span><span style="font-size:11px;color:var(--muted)">fetching...</span>`
+        : '<span style="color:var(--muted);font-size:12px">click ↻</span>';
+
+    return `<tr>
+      <td>
+        <div class="item-name">${item.name}</div>
+        <div class="item-type">${item.type}</div>
+      </td>
+      <td>${item.qty}</td>
+      <td>${fmt(item.paid)}</td>
+      <td>${fmt(totalCost)}</td>
+      <td>${marketDisplay}</td>
+      <td>${totalMarket != null ? fmt(totalMarket) : '—'}</td>
+      <td class="${profitClass}">${profit != null ? fmtSigned(profit) : '—'}</td>
+      <td>${trendBadge}</td>
+      <td>
+        <div class="action-btns">
+          <button class="btn-sm" onclick="refreshItemPrice('${item.id}')">↻</button>
+          <button class="btn-sm" onclick="editItem('${item.id}')">edit</button>
+          <button class="btn-sm del" onclick="deleteItem('${item.id}')">del</button>
+        </div>
+      </td>
+    </tr>`;
+  }).join('');
+
+  updateStats();
+}
+
+function updateStats() {
+  let totalInvested = 0, totalMarket = 0, marketCount = 0;
+  let bestItem = null, bestPct = -Infinity;
+
+  inventory.forEach(item => {
+    totalInvested += item.qty * item.paid;
+    if (item.market) {
+      const m = item.qty * item.market;
+      totalMarket += m;
+      marketCount++;
+      const pct = (item.market - item.paid) / item.paid * 100;
+      if (pct > bestPct) { bestPct = pct; bestItem = item; }
+    }
+  });
+
+  const profit = totalMarket - totalInvested;
+  const profitPct = totalInvested > 0 ? (profit / totalInvested * 100) : 0;
+
+  document.getElementById('totalInvested').textContent = '$' + totalInvested.toFixed(2);
+  document.getElementById('itemCount').textContent = `${inventory.length} item${inventory.length !== 1 ? 's' : ''}`;
+  document.getElementById('marketValue').textContent = marketCount > 0 ? '$' + totalMarket.toFixed(2) : '$0.00';
+
+  const profitEl = document.getElementById('totalProfit');
+  profitEl.textContent = profit >= 0 ? '+$' + profit.toFixed(2) : '-$' + Math.abs(profit).toFixed(2);
+  profitEl.className = 'stat-value ' + (profit >= 0 ? 'green' : 'red');
+
+  document.getElementById('profitPct').textContent = marketCount > 0
+    ? (profitPct >= 0 ? '+' : '') + profitPct.toFixed(1) + '% overall'
+    : 'no prices yet';
+
+  if (bestItem) {
+    document.getElementById('bestItem').textContent = bestItem.name.length > 22
+      ? bestItem.name.slice(0, 22) + '…'
+      : bestItem.name;
+    document.getElementById('bestPct').textContent = (bestPct >= 0 ? '+' : '') + bestPct.toFixed(1) + '% per unit';
+  } else {
+    document.getElementById('bestItem').textContent = '—';
+    document.getElementById('bestPct').textContent = 'no prices yet';
+  }
+
+  const now = new Date();
+  document.getElementById('lastUpdated').textContent = `last updated: ${now.toLocaleTimeString()}`;
+}
+
+async function refreshItemPrice(id) {
+  const item = inventory.find(i => i.id === id);
+  if (!item) return;
+  item.fetchingPrice = true;
+  render();
+  const price = await fetchEbayPrice(item.searchTerm || item.name);
+  item.fetchingPrice = false;
+  if (price) {
+    item.market = price;
+    showToast(`Updated: ${item.name} → $${price.toFixed(2)}`);
+  } else {
+    showToast(`Could not fetch price for ${item.name}`);
+  }
+  save();
+  render();
+}
+
+async function refreshAllPrices() {
+  showToast('Refreshing all prices...');
+  for (const item of inventory) {
+    item.fetchingPrice = true;
+  }
+  render();
+  for (const item of inventory) {
+    const price = await fetchEbayPrice(item.searchTerm || item.name);
+    item.fetchingPrice = false;
+    if (price) item.market = price;
+    save();
+    render();
+  }
+  showToast('All prices updated!');
+}
+
+function openModal(id) {
+  editingId = id || null;
+  document.getElementById('modalTitle').textContent = id ? 'Edit item' : 'Add item';
+
+  if (id) {
+    const item = inventory.find(i => i.id === id);
+    document.getElementById('itemName').value = item.name;
+    document.getElementById('itemType').value = item.type;
+    document.getElementById('itemQty').value = item.qty;
+    document.getElementById('itemPaid').value = item.paid;
+    document.getElementById('itemSearch').value = item.searchTerm || '';
+    document.getElementById('itemMarket').value = item.market || '';
+  } else {
+    document.getElementById('itemName').value = '';
+    document.getElementById('itemType').value = 'Booster Box';
+    document.getElementById('itemQty').value = '1';
+    document.getElementById('itemPaid').value = '';
+    document.getElementById('itemSearch').value = '';
+    document.getElementById('itemMarket').value = '';
+  }
+
+  document.getElementById('overlay').classList.add('active');
+  setTimeout(() => document.getElementById('itemName').focus(), 100);
+}
+
+function closeModal() {
+  document.getElementById('overlay').classList.remove('active');
+  editingId = null;
+}
+
+function handleOverlayClick(e) {
+  if (e.target === document.getElementById('overlay')) closeModal();
+}
+
+async function saveItem() {
+  const name = document.getElementById('itemName').value.trim();
+  const type = document.getElementById('itemType').value;
+  const qty = parseInt(document.getElementById('itemQty').value);
+  const paid = parseFloat(document.getElementById('itemPaid').value);
+  const searchTerm = document.getElementById('itemSearch').value.trim();
+  const marketOverride = document.getElementById('itemMarket').value;
+
+  if (!name || isNaN(qty) || isNaN(paid) || qty < 1 || paid < 0) {
+    showToast('Please fill in name, qty and price paid');
+    return;
+  }
+
+  if (editingId) {
+    const item = inventory.find(i => i.id === editingId);
+    item.name = name;
+    item.type = type;
+    item.qty = qty;
+    item.paid = paid;
+    item.searchTerm = searchTerm;
+    if (marketOverride) item.market = parseFloat(marketOverride);
+  } else {
+    const newItem = {
+      id: genId(),
+      name, type, qty, paid,
+      searchTerm,
+      market: marketOverride ? parseFloat(marketOverride) : null,
+      fetchingPrice: false,
+      addedAt: new Date().toISOString()
+    };
+    inventory.push(newItem);
+
+    if (!marketOverride && (searchTerm || name)) {
+      closeModal();
+      save();
+      render();
+      showToast('Item added! Fetching eBay price...');
+      await refreshItemPrice(newItem.id);
+      return;
+    }
+  }
+
+  save();
+  render();
+  closeModal();
+  showToast(editingId ? 'Item updated!' : 'Item added!');
+}
+
+function editItem(id) { openModal(id); }
+
+function deleteItem(id) {
+  if (!confirm('Delete this item?')) return;
+  inventory = inventory.filter(i => i.id !== id);
+  save();
+  render();
+  showToast('Item deleted');
+}
+
+function showToast(msg) {
+  const existing = document.querySelector('.toast');
+  if (existing) existing.remove();
+  const t = document.createElement('div');
+  t.className = 'toast';
+  t.textContent = msg;
+  document.body.appendChild(t);
+  setTimeout(() => t.remove(), 3000);
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') closeModal();
+});
+
+load();
+render();
+</script>
+</body>
+</html>
